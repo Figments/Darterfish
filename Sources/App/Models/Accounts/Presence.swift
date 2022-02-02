@@ -1,5 +1,6 @@
-//
-// Created by Alyx Mote on 1/30/22.
-//
-
-import Foundation
+enum Presence: String, Codable {
+    case Online
+    case Offline
+    case Away
+    case DoNotDisturb
+}

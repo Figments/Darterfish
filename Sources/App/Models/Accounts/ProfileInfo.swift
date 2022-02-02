@@ -1,4 +1,4 @@
-struct Profile: Codable {
+struct ProfileInfo: Codable {
     var avatar: String
     var bio: String
     var tagline: String

@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Argon2Swift",
+        "repositoryURL": "https://github.com/tmthecoder/Argon2Swift.git",
+        "state": {
+          "branch": "main",
+          "revision": "22f31a6a252aabcad82f406c904d367a961e1183",
+          "version": null
+        }
+      },
+      {
         "package": "async-http-client",
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
@@ -89,6 +98,15 @@
           "branch": null,
           "revision": "71cfedd3310d59b7d19e290176dd2a1a605a4252",
           "version": "2.0.7"
+        }
+      },
+      {
+        "package": "argon2",
+        "repositoryURL": "https://github.com/P-H-C/phc-winner-argon2.git",
+        "state": {
+          "branch": "master",
+          "revision": "f57e61e19229e23c4445b85494dbf7c07de721cb",
+          "version": null
         }
       },
       {

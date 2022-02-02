@@ -1,5 +1,7 @@
-//
-// Created by Alyx Mote on 1/30/22.
-//
-
-import Foundation
+enum Pronouns: String, Codable {
+    case SheHer = "She/Her"
+    case HeHim = "He/Him"
+    case TheyThem = "They/Them"
+    case ZeZir = "Ze/Zir"
+    case AnyAll = "Any/All"
+}

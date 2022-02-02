@@ -1,5 +1,5 @@
-//
-// Created by Alyx Mote on 2/1/22.
-//
-
-import Foundation
+struct PseudonymForm: Codable {
+    var userTag: String
+    var screenName: String
+    var pronouns: [Pronouns]
+}
