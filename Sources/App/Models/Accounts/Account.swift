@@ -29,7 +29,7 @@ final class Account: Model, Content {
     @Timestamp(key: "createdAt", on: .create)
     var createdAt: Date?
 
-    @Timestamp(key: "updatedAt", on: .create)
+    @Timestamp(key: "updatedAt", on: .update)
     var updatedAt: Date?
 
     init() { }

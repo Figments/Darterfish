@@ -7,6 +7,9 @@ final class Pseudonym: Model, Codable {
     @ID(key: .id)
     var id: UUID?
 
+    @Parent(key: "accountId")
+    var account: Account
+
     @Field(key: "userTag")
     var userTag: String
 

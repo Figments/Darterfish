@@ -1,6 +1,7 @@
 import Fluent
 import Vapor
 import Argon2Swift
+import UAParserSwift
 
 struct AuthController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -28,5 +29,11 @@ struct AuthController: RouteCollection {
         } else {
             throw Abort(.unauthorized)
         }
+    }
+
+    func createLoginPackage(account: Account, req: Request) {
+        let userAgent = UAParser.init(req.headers["User-Agent"])
+        let sessionData = Session.SessionData.init(deviceOS: userAgent.os as String, browser: userAgent.browser as String)
+        let session = Session.init(accountId: Account.IDValue, sessionData)
     }
 }
