@@ -1,6 +1,7 @@
 import Fluent
 import Vapor
 import Argon2Swift
+import UAParserSwift
 
 final class Session: Model, Content {
     static let schema = "sessions"
@@ -10,12 +11,15 @@ final class Session: Model, Content {
 
     @Parent(key: "accountId")
     var account: Account
-
-    @Field(key: "deviceOS")
-    var deviceOS: String
-
+    
     @Field(key: "browser")
-    var browser: String
+    var browser: String?
+    
+    @Field(key: "ipAddr")
+    var ipAddr: String?
+    
+    @Field(key: "os")
+    var os: String?
 
     @Field(key: "expires")
     var expires: Date?
@@ -28,24 +32,27 @@ final class Session: Model, Content {
 
     init() { }
 
-    init(id: UUID? = nil, accountId: Account.IDValue, session: Session.SessionData) {
+    init(id: UUID? = nil, accountId: Account.IDValue, info: Session.SessionInfo) {
         self.id = id
         self.$account.id = accountId
-        self.deviceOS = session.deviceOS
-        self.browser = session.browser
-        self.expires = session.expires
+        self.browser = info.browser
+        self.ipAddr = info.ipAddr
+        self.os = info.os
+        self.expires = info.expires
     }
 }
 
 extension Session {
-    struct SessionData: Content {
-        var deviceOS: String
-        var browser: String
+    struct SessionInfo {
+        var browser: String?
+        var ipAddr: String?
+        var os: String?
         var expires: Date?
-
-        init(deviceOS: String, browser: String, expires: Date?) {
-            self.deviceOS = deviceOS
+        
+        init(with browser: String?, from ipAddr: String?, on os: String?, expires: Date? = nil) {
             self.browser = browser
+            self.ipAddr = ipAddr
+            self.os = os
             self.expires = expires
         }
     }

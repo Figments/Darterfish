@@ -41,7 +41,7 @@ final class Account: Model, Content {
         self.email = formData.email
         self.password = hashedPassword.encodedString()
         self.pseudonyms = []
-        self.roles = [Roles.User]
+        self.roles = [.user]
         self.termsAgree = formData.termsAgree
         self.emailConfirmed = false
     }

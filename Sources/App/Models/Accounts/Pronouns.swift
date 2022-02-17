@@ -1,7 +1,9 @@
-enum Pronouns: String, Codable {
-    case SheHer = "She/Her"
-    case HeHim = "He/Him"
-    case TheyThem = "They/Them"
-    case ZeZir = "Ze/Zir"
-    case AnyAll = "Any/All"
+import Vapor
+
+enum Pronouns: String, Codable, Content {
+    case sheHer = "She/Her"
+    case heHim = "He/Him"
+    case theyThem = "They/Them"
+    case zeZir = "Ze/Zir"
+    case anyAll = "Any/All"
 }

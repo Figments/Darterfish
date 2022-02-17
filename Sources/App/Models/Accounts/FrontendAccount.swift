@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class FrontendAccount: Content {
+struct FrontendAccount: Content {
     var id: UUID?
     var pseudonyms: [String]
     var roles: [Roles]
@@ -10,7 +10,7 @@ final class FrontendAccount: Content {
     var createdAt: Date?
     var updatedAt: Date?
 
-    init(account: Account) {
+    init(_ account: Account) {
         self.id = account.id
         self.pseudonyms = account.pseudonyms
         self.roles = account.roles
