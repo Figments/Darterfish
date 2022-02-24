@@ -11,6 +11,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor/fluent-mongo-driver.git", from: "1.0.0"),
+        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
         .package(url: "https://github.com/tmthecoder/Argon2Swift.git", branch: "main"),
         .package(url: "https://github.com/malcommac/UAParserSwift.git", from: "1.0.1")
     ],
@@ -21,6 +22,7 @@ let package = Package(
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentMongoDriver", package: "fluent-mongo-driver"),
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "JWT", package: "jwt"),
                 .product(name: "Argon2Swift", package: "Argon2Swift"),
                 .product(name: "UAParserSwift", package: "UAParserSwift")
             ],

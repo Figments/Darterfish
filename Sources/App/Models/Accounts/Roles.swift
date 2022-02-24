@@ -1,17 +1,6 @@
 import Vapor
 
 enum Roles: String, Codable, Content {
-    static let allRoles: [Roles] = [
-        .admin,
-        .moderator,
-        .workApprover,
-        .chatModerator,
-        .maintainer,
-        .contributor,
-        .vip,
-        .supporter,
-        .user
-    ]
     case admin = "Admin"
     case moderator = "Moderator"
     case workApprover = "Work Approver"

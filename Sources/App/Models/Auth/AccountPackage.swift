@@ -3,10 +3,10 @@ import Fluent
 
 struct AccountPackage: Content {
     var account: FrontendAccount
-    var accessToken: UUID?
+    var token: String
 
-    init(_ account: FrontendAccount, _ token: UUID?) {
+    init(_ account: FrontendAccount, _ token: String) {
         self.account = account
-        self.accessToken = token
+        self.token = token
     }
 }
