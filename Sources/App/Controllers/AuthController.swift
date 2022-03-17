@@ -8,7 +8,8 @@ struct AuthController: RouteCollection {
         let auth = routes.grouped("auth")
         auth.post("register", use: register)
         auth.post("login", use: login)
-        auth.grouped(RolesMiddleware(needs: [.user])).get("logout", use: logout)
+        auth.get("refresh-token", use: refreshToken)
+        auth.get("logout", use: logout)
     }
 
     private func register(req: Request) async throws -> Response {
@@ -24,8 +25,7 @@ struct AuthController: RouteCollection {
             throw Abort(.notFound)
         }
 
-        let isCorrect = try! Argon2Swift.verifyHashString(password: loginForm.password, hash: existingAccount.password, type: Argon2Type.id)
-        if isCorrect {
+        if try! Argon2Swift.verifyHashString(password: loginForm.password, hash: existingAccount.password, type: Argon2Type.id) {
             return try await processLogin(for: existingAccount, via: req, session: loginForm.rememberMe)
         } else {
             throw Abort(.unauthorized)
@@ -34,6 +34,24 @@ struct AuthController: RouteCollection {
 
     private func logout(req: Request) async throws -> String {
         "You hit the logout route!"
+    }
+
+    private func refreshToken(req: Request) async throws -> Response {
+        guard let refreshToken = req.cookies["refreshToken"]?.string else {
+            throw Abort(.unauthorized, reason: "There's no refresh token here!")
+        }
+
+        guard let associatedSession =
+            try await Session
+                .query(on: req.db)
+                .with(\.$account)
+                .filter(\.$id == UUID(refreshToken).unsafelyUnwrapped)
+                .first()
+            else {
+                throw Abort(.unauthorized, reason: "No valid session associated with this token.")
+            }
+
+        return try await refreshAuthToken(session: associatedSession, on: req)
     }
 
     private func processLogin(for account: Account, via req: Request, session rememberMe: Bool) async throws -> Response {
@@ -68,5 +86,18 @@ struct AuthController: RouteCollection {
         } else {
             return response
         }
+    }
+
+    private func refreshAuthToken(session: Session, on request: Request) async throws -> Response {
+        let newToken = try request.jwt.sign(
+            TokenPayload.init(
+                subject: "vapor",
+                expiration: .init(value: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now),
+                accountId: session.account.id,
+                roles: session.account.roles
+            )
+        )
+
+        return try await RefreshPackage.init(newToken: newToken).encodeResponse(for: request)
     }
 }

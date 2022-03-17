@@ -60,6 +60,16 @@ extension Account {
         var password: String
         var rememberMe: Bool
     }
+
+    struct ChangeEmail: Content {
+        var email: String
+        var password: String
+    }
+
+    struct ChangePassword: Content {
+        var newPassword: String
+        var oldPassword: String
+    }
 }
 
 extension Account.RegisterForm: Validatable {

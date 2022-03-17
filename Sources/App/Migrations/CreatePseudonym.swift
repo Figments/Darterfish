@@ -9,7 +9,6 @@ struct CreatePseudonym: AsyncMigration {
                 .field("screenName", .string, .required)
                 .field("profile", .dictionary, .required)
                 .field("stats", .dictionary, .required)
-                .field("presence", .string)
                 .field("roles", .array(of: .string))
                 .field("createdAt", .datetime)
                 .field("updatedAt", .datetime)
