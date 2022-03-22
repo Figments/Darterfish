@@ -32,8 +32,45 @@ struct AuthController: RouteCollection {
         }
     }
 
-    private func logout(req: Request) async throws -> String {
-        "You hit the logout route!"
+    private func logout(req: Request) async throws -> HTTPResponseStatus {
+        guard let existingRefreshToken = req.cookies["refreshToken"] else {
+            // If there is no existing refresh token, just return an Okay status
+            return .ok
+        }
+
+        // Since a token exists, we need to find the appropriate session to invalidate.
+        // To do this, we need to grab the JWT with this request.
+        guard let token = try? req.jwt.verify(as: TokenPayload.self) else {
+            // If no token is found, just clear the refresh token.
+            req.cookies["refreshToken"] = HTTPCookies.Value(
+                string: "expired",
+                expires: .now,
+                isSecure: false,
+                isHTTPOnly: true,
+                sameSite: .lax
+            )
+            return .ok
+        }
+
+        // Grab the related account from the database...
+        guard let account = try await Account.find(token.accountId, on: req.db) else {
+            throw Abort(.notFound, reason: "Something went wrong!")
+        }
+
+        // ...then delete the related session attached to this account...
+        try await account.$sessions.query(on: req.db).filter(\._$id == UUID(existingRefreshToken.string).unsafelyUnwrapped).delete()
+
+        // ...and clear the refresh token.
+        req.cookies["refreshToken"] = HTTPCookies.Value(
+            string: "expired",
+            expires: .now,
+            isSecure: false,
+            isHTTPOnly: true,
+            sameSite: .lax
+        )
+
+        // After all that, return an Okay.
+        return .ok
     }
 
     private func refreshToken(req: Request) async throws -> Response {
@@ -61,8 +98,8 @@ struct AuthController: RouteCollection {
             from: req.remoteAddress?.ipAddress,
             on: userAgent.os?.name
         )
-        let newSession = Session.init(accountId: account.id.unsafelyUnwrapped, info: sessionInfo)
-        try await newSession.save(on: req.db)
+        let newSession = Session(accountId: account.id.unsafelyUnwrapped, info: sessionInfo)
+        try await account.$sessions.create(newSession, on: req.db)
 
         let token = try req.jwt.sign(
             TokenPayload.init(

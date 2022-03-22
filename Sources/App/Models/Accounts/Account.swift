@@ -26,6 +26,9 @@ final class Account: Model, Content {
     @Field(key: "emailConfirmed")
     var emailConfirmed: Bool
 
+    @Children(for: \.$account)
+    var sessions: [Session]
+
     @Timestamp(key: "createdAt", on: .create)
     var createdAt: Date?
 
