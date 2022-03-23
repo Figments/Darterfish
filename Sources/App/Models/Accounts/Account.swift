@@ -1,5 +1,5 @@
-import Fluent
 import Vapor
+import Fluent
 import Argon2Swift
 
 final class Account: Model, Content {
@@ -41,12 +41,12 @@ final class Account: Model, Content {
         let hashedPassword = try! Argon2Swift.hashPasswordString(password: formData.password, salt: Salt.newSalt(), type: Argon2Type.id)
 
         self.id = id
-        self.email = formData.email
-        self.password = hashedPassword.encodedString()
-        self.pseudonyms = []
-        self.roles = [.user]
-        self.termsAgree = formData.termsAgree
-        self.emailConfirmed = false
+        email = formData.email
+        password = hashedPassword.encodedString()
+        pseudonyms = []
+        roles = [.user]
+        termsAgree = formData.termsAgree
+        emailConfirmed = false
     }
 }
 

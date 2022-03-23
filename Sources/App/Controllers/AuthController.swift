@@ -32,24 +32,28 @@ struct AuthController: RouteCollection {
         }
     }
 
-    private func logout(req: Request) async throws -> HTTPResponseStatus {
+    private func logout(req: Request) async throws -> Response {
+        // First, create a blank response
+        let res = Response()
+
         guard let existingRefreshToken = req.cookies["refreshToken"] else {
             // If there is no existing refresh token, just return an Okay status
-            return .ok
+            res.status = .ok
+            return res
         }
 
         // Since a token exists, we need to find the appropriate session to invalidate.
         // To do this, we need to grab the JWT with this request.
         guard let token = try? req.jwt.verify(as: TokenPayload.self) else {
             // If no token is found, just clear the refresh token.
-            req.cookies["refreshToken"] = HTTPCookies.Value(
+            res.cookies["refreshToken"] = HTTPCookies.Value(
                 string: "expired",
                 expires: .now,
                 isSecure: false,
                 isHTTPOnly: true,
                 sameSite: .lax
             )
-            return .ok
+            return res
         }
 
         // Grab the related account from the database...
@@ -61,7 +65,7 @@ struct AuthController: RouteCollection {
         try await account.$sessions.query(on: req.db).filter(\._$id == UUID(existingRefreshToken.string).unsafelyUnwrapped).delete()
 
         // ...and clear the refresh token.
-        req.cookies["refreshToken"] = HTTPCookies.Value(
+        res.cookies["refreshToken"] = HTTPCookies.Value(
             string: "expired",
             expires: .now,
             isSecure: false,
@@ -70,7 +74,7 @@ struct AuthController: RouteCollection {
         )
 
         // After all that, return an Okay.
-        return .ok
+        return res
     }
 
     private func refreshToken(req: Request) async throws -> Response {
