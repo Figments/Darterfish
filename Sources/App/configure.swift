@@ -19,6 +19,8 @@ public func configure(_ app: Application) throws {
     // Adding migrations
     app.migrations.add(CreateAccount())
     app.migrations.add(CreateSession())
+    app.migrations.add(CreatePseudonym())
+    app.migrations.add(CreateUserContent())
 
     // register routes
     try routes(app)
