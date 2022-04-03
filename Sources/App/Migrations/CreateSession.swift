@@ -3,7 +3,7 @@ import Fluent
 struct CreateSession: AsyncMigration {
     func prepare(on database: Database) async throws {
         return try await database.schema("sessions")
-                .id()
+                .field("_id", .string)
                 .foreignKey("accountId", references: "accounts", "id")
                 .field("browser", .string)
                 .field("ipAddr", .string)

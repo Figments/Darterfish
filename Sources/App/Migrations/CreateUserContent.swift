@@ -3,7 +3,7 @@ import Fluent
 struct CreateUserContent: AsyncMigration {
     func prepare(on database: Database) async throws {
         return try await database.schema("content")
-            .id()
+            .field("_id", .string)
             .foreignKey("author", references: "pseudonyms", "id")
             .field("title", .string, .required)
             .field("desc", .string, .required)

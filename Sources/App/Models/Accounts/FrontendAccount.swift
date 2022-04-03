@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 
 struct FrontendAccount: Content {
-    var id: UUID?
+    var id: String?
     var pseudonyms: [String]
     var roles: [Roles]
     var termsAgree: Bool

@@ -6,8 +6,8 @@ import UAParserSwift
 final class Session: Model, Content {
     static let schema = "sessions"
 
-    @ID(key: .id)
-    var id: UUID?
+    @ID(custom: "_id")
+    var id: String?
 
     @Parent(key: "accountId")
     var account: Account
@@ -32,13 +32,13 @@ final class Session: Model, Content {
 
     init() { }
 
-    init(id: UUID? = nil, accountId: Account.IDValue, info: Session.SessionInfo) {
+    init(id: String? = nil, accountId: Account.IDValue, info: Session.SessionInfo) {
         self.id = id
         self.$account.id = accountId
-        self.browser = info.browser
-        self.ipAddr = info.ipAddr
-        self.os = info.os
-        self.expires = info.expires
+        browser = info.browser
+        ipAddr = info.ipAddr
+        os = info.os
+        expires = info.expires
     }
 }
 

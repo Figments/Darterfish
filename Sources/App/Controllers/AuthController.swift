@@ -62,7 +62,7 @@ struct AuthController: RouteCollection {
         }
 
         // ...then delete the related session attached to this account...
-        try await account.$sessions.query(on: req.db).filter(\._$id == UUID(existingRefreshToken.string).unsafelyUnwrapped).delete()
+        try await account.$sessions.query(on: req.db).filter(\._$id == existingRefreshToken.string).delete()
 
         // ...and clear the refresh token.
         res.cookies["refreshToken"] = HTTPCookies.Value(
@@ -86,7 +86,7 @@ struct AuthController: RouteCollection {
             try await Session
                 .query(on: req.db)
                 .with(\.$account)
-                .filter(\.$id == UUID(refreshToken).unsafelyUnwrapped)
+                .filter(\.$id == refreshToken)
                 .first()
             else {
                 throw Abort(.unauthorized, reason: "No valid session associated with this token.")
@@ -117,7 +117,7 @@ struct AuthController: RouteCollection {
         let response = try await AccountPackage(FrontendAccount(account), token).encodeResponse(for: req)
         if rememberMe == true {
             response.cookies["refreshToken"] = HTTPCookies.Value(
-                string: newSession.id?.uuidString ?? "aToken",
+                string: newSession.id.unsafelyUnwrapped,
                 expires: .distantFuture,
                 isSecure: false,
                 isHTTPOnly: true,

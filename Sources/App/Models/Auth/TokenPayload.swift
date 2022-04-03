@@ -11,7 +11,7 @@ struct TokenPayload: JWTPayload {
 
     var subject: SubjectClaim
     var expiration: ExpirationClaim
-    var accountId: UUID?
+    var accountId: String?
     var roles: [Roles]
 
     func verify(using signer: JWTSigner) throws {

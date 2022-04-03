@@ -30,7 +30,7 @@ struct AccountController: RouteCollection {
         // And begin a transaction to create a new Pseudonym, then save its ID to the
         // account. When complete, return the newly-created Pseudonym
         return try await req.db.transaction { database -> Pseudonym in
-            let pseudId = UUID()
+            let pseudId = UUID().uuidString
             let newPseud = Pseudonym(
                 id: pseudId,
                 for: account.id.unsafelyUnwrapped,
@@ -39,7 +39,7 @@ struct AccountController: RouteCollection {
             )
             try await newPseud.save(on: database)
 
-            account.pseudonyms.append(pseudId.uuidString)
+            account.pseudonyms.append(pseudId)
             try await account.save(on: database)
 
             return newPseud

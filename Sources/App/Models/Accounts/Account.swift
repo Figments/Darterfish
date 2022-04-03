@@ -5,8 +5,8 @@ import Argon2Swift
 final class Account: Model, Content {
     static let schema = "accounts"
 
-    @ID(key: .id)
-    var id: UUID?
+    @ID(custom: "_id")
+    var id: String?
 
     @Field(key: "email")
     var email: String
@@ -37,7 +37,7 @@ final class Account: Model, Content {
 
     init() { }
 
-    init(id: UUID? = nil, formData: Account.RegisterForm) {
+    init(id: String? = nil, formData: Account.RegisterForm) {
         let hashedPassword = try! Argon2Swift.hashPasswordString(password: formData.password, salt: Salt.newSalt(), type: Argon2Type.id)
 
         self.id = id

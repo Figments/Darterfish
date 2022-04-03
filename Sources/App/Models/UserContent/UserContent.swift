@@ -4,8 +4,8 @@ import Fluent
 final class UserContent: Model, Content {
     static let schema = "content"
 
-    @ID(key: .id)
-    var id: UUID?
+    @ID(custom: "_id")
+    var id: String?
 
     @Parent(key: "author")
     var author: Pseudonym

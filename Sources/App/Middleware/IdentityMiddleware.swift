@@ -27,7 +27,7 @@ struct IdentityMiddleware: AsyncMiddleware {
         }
 
         // Grab the related pseudonym from the provided ID
-        guard let pseudonym = try await Pseudonym.find(UUID(pseudId), on: request.db) else {
+        guard let pseudonym = try await Pseudonym.find(pseudId, on: request.db) else {
             throw Abort(.notFound, reason: "No such pseudonym exists. Check to make sure the ID provided is correct.")
         }
 

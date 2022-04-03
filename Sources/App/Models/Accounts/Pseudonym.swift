@@ -4,8 +4,8 @@ import Vapor
 final class Pseudonym: Model, Content {
     static let schema = "pseudonyms"
 
-    @ID(key: .id)
-    var id: UUID?
+    @ID(custom: "_id")
+    var id: String?
 
     @Parent(key: "accountId")
     var account: Account
@@ -33,7 +33,7 @@ final class Pseudonym: Model, Content {
 
     init() { }
 
-    init(id: UUID? = nil, for accountId: Account.IDValue, with formData: Pseudonym.PseudonymForm, roles: [Roles]) {
+    init(id: String? = nil, for accountId: Account.IDValue, with formData: Pseudonym.PseudonymForm, roles: [Roles]) {
         self.id = id
         self.$account.id = accountId
         userTag = formData.userTag
